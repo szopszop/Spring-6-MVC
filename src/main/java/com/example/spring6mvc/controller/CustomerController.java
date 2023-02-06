@@ -4,6 +4,7 @@ package com.example.spring6mvc.controller;
 import com.example.spring6mvc.model.Customer;
 import com.example.spring6mvc.service.CustomerService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/customer")
 public class CustomerController {
 
