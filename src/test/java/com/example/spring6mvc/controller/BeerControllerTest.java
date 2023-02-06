@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.example.spring6mvc.controller.BeerController.BEER_PATH;
+import static com.example.spring6mvc.controller.BeerController.BEER_PATH_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -54,7 +55,7 @@ class BeerControllerTest {
     void shouldReturnBeer() throws Exception {
         Beer testBeer = beerServiceImpl.listBeers().get(0);
         given(beerService.getBeerById(testBeer.getBeerId())).willReturn(testBeer);
-        mockMvc.perform(get( BEER_PATH + "/" + testBeer.getBeerId())
+        mockMvc.perform(get( BEER_PATH_ID, testBeer.getBeerId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -92,7 +93,7 @@ class BeerControllerTest {
     void shouldUpdateBeer() throws Exception {
         Beer beer = beerServiceImpl.listBeers().get(0);
 
-        mockMvc.perform(put(BEER_PATH + "/" + beer.getBeerId())
+        mockMvc.perform(put(BEER_PATH_ID, beer.getBeerId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beer)))
@@ -105,7 +106,7 @@ class BeerControllerTest {
     void checkIf_UUID_IsProperlyPassed() throws Exception {
         Beer beer = beerServiceImpl.listBeers().get(0);
 
-        mockMvc.perform(delete(BEER_PATH + "/" + beer.getBeerId())
+        mockMvc.perform(delete(BEER_PATH_ID, beer.getBeerId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -120,7 +121,7 @@ class BeerControllerTest {
 
         Map<String, Object> beerMap = new HashMap<>();
         beerMap.put("beerName", "New Name");
-        mockMvc.perform(patch(BEER_PATH + "/" + beer.getBeerId())
+        mockMvc.perform(patch(BEER_PATH_ID, beer.getBeerId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerMap)))

@@ -1,6 +1,5 @@
 package com.example.spring6mvc.controller;
 
-import com.example.spring6mvc.model.Beer;
 import com.example.spring6mvc.model.Customer;
 import com.example.spring6mvc.service.CustomerService;
 import com.example.spring6mvc.service.CustomerServiceImpl;
@@ -17,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.UUID;
 
 import static com.example.spring6mvc.controller.CustomerController.CUSTOMER_PATH;
+import static com.example.spring6mvc.controller.CustomerController.CUSTOMER_PATH_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,7 +49,7 @@ class CustomerControllerTest {
 
         given(customerService.getCustomerById(testCustomer.getCustomerId())).willReturn(testCustomer);
 
-        mockMvc.perform(get(CUSTOMER_PATH + "/" + testCustomer.getCustomerId())
+        mockMvc.perform(get(CUSTOMER_PATH_ID, testCustomer.getCustomerId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -87,7 +87,7 @@ class CustomerControllerTest {
     void shouldUpdateCustomer() throws Exception{
         Customer customer = customerServiceImpl.listCustomers().get(0);
 
-        mockMvc.perform(put(CUSTOMER_PATH + "/" + customer.getCustomerId())
+        mockMvc.perform(put(CUSTOMER_PATH_ID, customer.getCustomerId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
@@ -100,7 +100,7 @@ class CustomerControllerTest {
     void checkIf_UUID_IsProperlyPassed() throws Exception {
         Customer customer = customerServiceImpl.listCustomers().get(0);
 
-        mockMvc.perform(delete(CUSTOMER_PATH + "/" + customer.getCustomerId())
+        mockMvc.perform(delete(CUSTOMER_PATH_ID, customer.getCustomerId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
