@@ -13,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.example.spring6mvc.controller.CustomerController.CUSTOMER_PATH;
@@ -47,7 +48,7 @@ class CustomerControllerTest {
     void shouldReturnCustomer() throws Exception {
         Customer testCustomer = customerServiceImpl.listCustomers().get(0);
 
-        given(customerService.getCustomerById(testCustomer.getCustomerId())).willReturn(testCustomer);
+        given(customerService.getCustomerById(testCustomer.getCustomerId())).willReturn(Optional.of(testCustomer));
 
         mockMvc.perform(get(CUSTOMER_PATH_ID, testCustomer.getCustomerId())
                 .accept(MediaType.APPLICATION_JSON))
