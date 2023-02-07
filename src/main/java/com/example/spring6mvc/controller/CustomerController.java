@@ -4,7 +4,6 @@ package com.example.spring6mvc.controller;
 import com.example.spring6mvc.model.CustomerDTO;
 import com.example.spring6mvc.service.CustomerService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class CustomerController {
@@ -23,8 +21,8 @@ public class CustomerController {
 
     private final CustomerService customerService;
     @GetMapping(CUSTOMER_PATH)
-    public List<CustomerDTO> getCustomers() {
-        return customerService.listCustomers();
+    public List<CustomerDTO> listCustomers() {
+        return customerService.getAllCustomers();
     }
 
     @GetMapping(CUSTOMER_PATH_ID)

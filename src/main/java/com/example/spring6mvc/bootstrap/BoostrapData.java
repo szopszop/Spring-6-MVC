@@ -26,8 +26,8 @@ public class BoostrapData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        loadBeerData();
         loadCustomerData();
+        loadBeerData();
     }
 
     public void loadBeerData() {
@@ -76,36 +76,36 @@ public class BoostrapData implements CommandLineRunner {
     }
 
 
-    public void loadCustomerData() {
-        if (customerRepository.count() == 0) {
 
+    private void loadCustomerData() {
+
+        if (customerRepository.count() == 0) {
             Customer customer1 = Customer.builder()
                     .customerId(UUID.randomUUID())
-                    .customerName("Radek")
-                    .version(432L)
+                    .customerName("Customer 1")
+                    .version(1L)
                     .createDate(LocalDateTime.now())
                     .updateDate(LocalDateTime.now())
                     .build();
 
             Customer customer2 = Customer.builder()
                     .customerId(UUID.randomUUID())
-                    .customerName("Waclaw")
-                    .version(123L)
+                    .customerName("Customer 2")
+                    .version(1L)
                     .createDate(LocalDateTime.now())
                     .updateDate(LocalDateTime.now())
                     .build();
 
             Customer customer3 = Customer.builder()
                     .customerId(UUID.randomUUID())
-                    .customerName("Rohan")
-                    .version(111123L)
+                    .customerName("Customer 3")
+                    .version(1L)
                     .createDate(LocalDateTime.now())
                     .updateDate(LocalDateTime.now())
                     .build();
 
-            customerRepository.saveAll(Arrays.asList(customer1, customer2,customer3));
-
+            customerRepository.saveAll(Arrays.asList(customer1, customer2, customer3));
         }
-    }
 
+    }
 }

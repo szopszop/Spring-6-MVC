@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,13 +20,17 @@ public class CustomerServiceJPA implements CustomerService {
     private final CustomerMapper customerMapper;
 
     @Override
-    public List<CustomerDTO> listCustomers() {
-        return null;
+    public List<CustomerDTO> getAllCustomers() {
+        return customerRepository.findAll()
+                .stream()
+                .map(customerMapper::customerToCustomerDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Optional<CustomerDTO> getCustomerById(UUID customerId) {
-        return Optional.empty();
+        return Optional.ofNullable(customerMapper.customerToCustomerDto(
+                customerRepository.findById(customerId).orElse(null)));
     }
 
     @Override

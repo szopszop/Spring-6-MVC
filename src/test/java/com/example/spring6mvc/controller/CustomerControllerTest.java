@@ -46,7 +46,7 @@ class CustomerControllerTest {
 
     @Test
     void shouldReturnCustomer() throws Exception {
-        CustomerDTO testCustomer = customerServiceImpl.listCustomers().get(0);
+        CustomerDTO testCustomer = customerServiceImpl.getAllCustomers().get(0);
 
         given(customerService.getCustomerById(testCustomer.getCustomerId())).willReturn(Optional.of(testCustomer));
 
@@ -60,7 +60,7 @@ class CustomerControllerTest {
 
     @Test
     void shouldReturnAllCustomers() throws Exception {
-        given(customerService.listCustomers()).willReturn(customerServiceImpl.listCustomers());
+        given(customerService.getAllCustomers()).willReturn(customerServiceImpl.getAllCustomers());
         mockMvc.perform(get(CUSTOMER_PATH)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -70,10 +70,10 @@ class CustomerControllerTest {
 
     @Test
     void shouldCreateNewCustomer() throws Exception {
-        CustomerDTO customer = customerServiceImpl.listCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
         customer.setVersion(null);
         customer.setCustomerId(null);
-        given(customerService.saveNewCustomer(any(CustomerDTO.class))).willReturn(customerServiceImpl.listCustomers().get(1));
+        given(customerService.saveNewCustomer(any(CustomerDTO.class))).willReturn(customerServiceImpl.getAllCustomers().get(1));
 
         mockMvc.perform(post(CUSTOMER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
@@ -86,7 +86,7 @@ class CustomerControllerTest {
 
     @Test
     void shouldUpdateCustomer() throws Exception{
-        CustomerDTO customer = customerServiceImpl.listCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
 
         mockMvc.perform(put(CUSTOMER_PATH_ID, customer.getCustomerId())
                 .accept(MediaType.APPLICATION_JSON)
@@ -99,7 +99,7 @@ class CustomerControllerTest {
 
     @Test
     void checkIf_UUID_IsProperlyPassed() throws Exception {
-        CustomerDTO customer = customerServiceImpl.listCustomers().get(0);
+        CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
 
         mockMvc.perform(delete(CUSTOMER_PATH_ID, customer.getCustomerId())
                 .accept(MediaType.APPLICATION_JSON))

@@ -21,11 +21,9 @@ public class BeerServiceJPA implements BeerService {
     private final BeerRepository beerRepository;
     private final BeerMapper beerMapper;
 
-    private Map<UUID, BeerDTO> beerMap;
-
 
     @Override
-    public List<BeerDTO> listBeers() {
+    public List<BeerDTO> getAllBeers() {
         return beerRepository.findAll()
                 .stream()
                 .map(beerMapper::beerToBeerDto)
