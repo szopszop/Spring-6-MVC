@@ -1,6 +1,6 @@
 package com.example.spring6mvc.service;
 
-import com.example.spring6mvc.model.Customer;
+import com.example.spring6mvc.model.CustomerDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,12 +8,12 @@ import java.util.UUID;
 
 public interface CustomerService {
 
-    List<Customer> listCustomers();
-    Optional<Customer> getCustomerById(UUID customerId);
+    List<CustomerDTO> listCustomers();
+    Optional<CustomerDTO> getCustomerById(UUID customerId);
 
-    Customer saveNewCustomer(Customer customer);
+    CustomerDTO saveNewCustomer(CustomerDTO customer);
 
-    void updateCustomerById(UUID customerId, Customer customer);
+    void updateCustomerById(UUID customerId, CustomerDTO customer);
 
     void deleteById(UUID customerID);
 }
