@@ -4,6 +4,7 @@ import com.example.spring6mvc.model.BeerStyle;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Beer {
 
     @Id
@@ -28,8 +30,11 @@ public class Beer {
     @Version
     private Integer version;
 
+
     @NotBlank
     @NotNull
+    @Size(max  = 50)
+    @Column(length = 50)
     private String beerName;
 
     @NotNull
@@ -37,6 +42,8 @@ public class Beer {
 
     @NotBlank
     @NotNull
+    @Size(max = 255)
+
     private String upc;
     private Integer quantityOnHand;
 
