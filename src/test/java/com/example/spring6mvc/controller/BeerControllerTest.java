@@ -91,13 +91,58 @@ class BeerControllerTest {
     }
 
     @Test
-    void shouldSendBadRequestAfterSavingNewBeerWithNullName() throws Exception {
-        BeerDTO beerDTO = BeerDTO.builder().build();
+    void shouldSendBadRequestAfterSavingNewBeerWithAllNullRequiredArgs() throws Exception {
+        BeerDTO beerDTO = BeerDTO.builder()
+                .build();
         MvcResult mvcResult = mockMvc.perform(post(BEER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beerDTO)))
-                .andExpect(status().isBadRequest()).andReturn();
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        System.out.println(mvcResult.getResponse().getContentAsString());
+    }
+    @Test
+    void shouldSendBadRequestAfterSavingNewBeerWithNullUpc() throws Exception {
+        BeerDTO beerDTO = BeerDTO.builder()
+                .beerName("New name")
+                .upc(null)
+                .build();
+        MvcResult mvcResult = mockMvc.perform(post(BEER_PATH)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(beerDTO)))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        System.out.println(mvcResult.getResponse().getContentAsString());
+    }
+    @Test
+    void shouldSendBadRequestAfterUpdatingBeerWithBlankName() throws Exception {
+        BeerDTO beerDTO = beerServiceImpl.getAllBeers().get(0);
+        beerDTO.setBeerName(" ");
+        given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beerDTO));
+
+        MvcResult mvcResult = mockMvc.perform(put(BEER_PATH_ID, beerDTO.getBeerId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(beerDTO)))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        System.out.println(mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    void shouldSendBadRequestAfterUpdatingBeerWithNullUpc() throws Exception {
+        BeerDTO beerDTO = beerServiceImpl.getAllBeers().get(0);
+        beerDTO.setUpc(" ");
+        given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beerDTO));
+
+        MvcResult mvcResult = mockMvc.perform(put(BEER_PATH_ID, beerDTO.getBeerId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(beerDTO)))
+                .andExpect(status().isBadRequest())
+                .andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString());
     }
 
