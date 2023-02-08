@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.given;
 
 
 @SpringBootTest
@@ -76,6 +77,8 @@ class BeerControllerIT {
         Beer beer = beerRepository.findById(savedUUID).get();
         assertThat(beer).isNotNull();
     }
+
+
 
     @Transactional
     @Rollback
