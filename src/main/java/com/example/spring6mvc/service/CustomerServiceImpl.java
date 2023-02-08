@@ -2,6 +2,7 @@ package com.example.spring6mvc.service;
 
 import com.example.spring6mvc.model.CustomerDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -68,18 +69,30 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCustomerById(UUID customerId, CustomerDTO customer) {
+    public Optional<CustomerDTO> updateCustomerById(UUID customerId, CustomerDTO dto) {
         CustomerDTO existingCustomer = customerMap.get(customerId);
-        existingCustomer.setCustomerName(customer.getCustomerName());
-        existingCustomer.setVersion(customer.getVersion());
+        existingCustomer.setCustomerName(dto.getCustomerName());
+        existingCustomer.setVersion(dto.getVersion());
         existingCustomer.setUpdateDate(LocalDateTime.now());
 
         customerMap.put(existingCustomer.getCustomerId(), existingCustomer);
+        return Optional.of(existingCustomer);
     }
 
     @Override
-    public void deleteById(UUID customerID) {
+    public Boolean deleteById(UUID customerID) {
         customerMap.remove(customerID);
+        return true;
+    }
+
+    @Override
+    public void patchCustomerById(UUID customerId, CustomerDTO dto) {
+        CustomerDTO existing = customerMap.get(customerId);
+
+        if (StringUtils.hasText(dto.getCustomerName())){
+            existing.setCustomerName(dto.getCustomerName());
+        }
+        dto.setUpdateDate(LocalDateTime.now());
     }
 
 

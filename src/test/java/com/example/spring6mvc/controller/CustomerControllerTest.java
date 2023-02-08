@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -31,12 +32,14 @@ class CustomerControllerTest {
 
     @Autowired
     MockMvc mockMvc;
-
     @Autowired
     ObjectMapper objectMapper;
-
     @MockBean
     CustomerService customerService;
+    @Captor
+    ArgumentCaptor<UUID> uuidArgumentCaptor;
+    @Captor
+    ArgumentCaptor<CustomerDTO> customerArgumentCaptor;
 
     CustomerServiceImpl customerServiceImpl;
     @BeforeEach
@@ -87,7 +90,7 @@ class CustomerControllerTest {
     @Test
     void shouldUpdateCustomer() throws Exception{
         CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
-
+        given(customerService.updateCustomerById(any(), any())).willReturn(Optional.of(customer));
         mockMvc.perform(put(CUSTOMER_PATH_ID, customer.getCustomerId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -100,12 +103,11 @@ class CustomerControllerTest {
     @Test
     void checkIf_UUID_IsProperlyPassed() throws Exception {
         CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
-
+        given(customerService.deleteById(any())).willReturn(true);
         mockMvc.perform(delete(CUSTOMER_PATH_ID, customer.getCustomerId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
         verify(customerService).deleteById(uuidArgumentCaptor.capture());
 
         assertThat(customer.getCustomerId()).isEqualTo(uuidArgumentCaptor.getValue());

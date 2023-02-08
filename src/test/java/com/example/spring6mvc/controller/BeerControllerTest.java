@@ -36,7 +36,6 @@ class BeerControllerTest {
     MockMvc mockMvc;
     @Autowired
     ObjectMapper objectMapper;
-
     @Captor
     ArgumentCaptor<BeerDTO> beerArgumentCaptor;
     @Captor

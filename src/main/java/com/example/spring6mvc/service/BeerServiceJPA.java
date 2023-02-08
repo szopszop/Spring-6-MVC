@@ -34,20 +34,20 @@ public class BeerServiceJPA implements BeerService {
     }
 
     @Override
-    public BeerDTO saveNewBeer(BeerDTO beer) {
-        return beerMapper.beerToBeerDto(beerRepository.save(beerMapper.beerDtoToBeer(beer)));
+    public BeerDTO saveNewBeer(BeerDTO dto) {
+        return beerMapper.beerToBeerDto(beerRepository.save(beerMapper.beerDtoToBeer(dto)));
     }
 
     @Override
-    public Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO beer) {
+    public Optional<BeerDTO> updateBeerById(UUID beerId, BeerDTO dto) {
         AtomicReference<Optional<BeerDTO>> atomicReference = new AtomicReference<>();
 
-        beerRepository.findById(beerId).ifPresentOrElse(foundBeer -> {
-            foundBeer.setBeerName(beer.getBeerName());
-            foundBeer.setBeerStyle(beer.getBeerStyle());
-            foundBeer.setUpc(beer.getUpc());
-            foundBeer.setPrice(beer.getPrice());
-            atomicReference.set(Optional.of(beerMapper.beerToBeerDto(beerRepository.save(foundBeer))));
+        beerRepository.findById(beerId).ifPresentOrElse(beerToUpdate -> {
+            beerToUpdate.setBeerName(dto.getBeerName());
+            beerToUpdate.setBeerStyle(dto.getBeerStyle());
+            beerToUpdate.setUpc(dto.getUpc());
+            beerToUpdate.setPrice(dto.getPrice());
+            atomicReference.set(Optional.of(beerMapper.beerToBeerDto(beerRepository.save(beerToUpdate))));
         }, () -> {
             atomicReference.set(Optional.empty());
         });
@@ -64,7 +64,7 @@ public class BeerServiceJPA implements BeerService {
     }
 
     @Override
-    public void patchBeerById(UUID beerId, BeerDTO beer) {
+    public void patchBeerById(UUID beerId, BeerDTO dto) {
 
     }
 }
