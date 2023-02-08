@@ -93,6 +93,7 @@ class BeerControllerTest {
     @Test
     void shouldUpdateBeer() throws Exception {
         BeerDTO beer = beerServiceImpl.getAllBeers().get(0);
+        given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
 
         mockMvc.perform(put(BEER_PATH_ID, beer.getBeerId())
                 .accept(MediaType.APPLICATION_JSON)
@@ -100,18 +101,18 @@ class BeerControllerTest {
                 .content(objectMapper.writeValueAsString(beer)))
                 .andExpect(status().isNoContent());
 
-        verify(beerService).updateById(any(UUID.class), any(BeerDTO.class));
+        verify(beerService).updateBeerById(any(UUID.class), any(BeerDTO.class));
     }
 
     @Test
     void checkIf_UUID_IsProperlyPassed() throws Exception {
         BeerDTO beer = beerServiceImpl.getAllBeers().get(0);
-
+        given(beerService.deleteBeerById(any())).willReturn(true);
         mockMvc.perform(delete(BEER_PATH_ID, beer.getBeerId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        verify(beerService).deleteById(uuidArgumentCaptor.capture());
+        verify(beerService).deleteBeerById(uuidArgumentCaptor.capture());
 
         assertThat(beer.getBeerId()).isEqualTo(uuidArgumentCaptor.getValue());
     }
@@ -128,7 +129,7 @@ class BeerControllerTest {
                         .content(objectMapper.writeValueAsString(beerMap)))
                 .andExpect(status().isNoContent());
 
-        verify(beerService).patchById(uuidArgumentCaptor.capture(), beerArgumentCaptor.capture());
+        verify(beerService).patchBeerById(uuidArgumentCaptor.capture(), beerArgumentCaptor.capture());
 
         assertThat(beer.getBeerId()).isEqualTo(uuidArgumentCaptor.getValue());
         assertThat(beerMap.get("beerName")).isEqualTo(beerArgumentCaptor.getValue().getBeerName());

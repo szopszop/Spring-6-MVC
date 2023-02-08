@@ -21,7 +21,7 @@ public class CustomerController {
 
     private final CustomerService customerService;
     @GetMapping(CUSTOMER_PATH)
-    public List<CustomerDTO> listCustomers() {
+    public List<CustomerDTO> getAllCustomers() {
         return customerService.getAllCustomers();
     }
 
@@ -31,7 +31,7 @@ public class CustomerController {
     }
 
     @PostMapping(CUSTOMER_PATH)
-    public ResponseEntity addCustomer(@RequestBody CustomerDTO customer) {
+    public ResponseEntity saveNewCustomer(@RequestBody CustomerDTO customer) {
         CustomerDTO savedCustomer = customerService.saveNewCustomer(customer);
 
         HttpHeaders headers = new HttpHeaders();
