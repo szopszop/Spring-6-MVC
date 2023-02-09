@@ -2,14 +2,14 @@ package com.example.spring6mvc.service;
 
 import com.example.spring6mvc.model.BeerDTO;
 import com.example.spring6mvc.model.BeerStyle;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface BeerService {
 
-    List<BeerDTO> getListOfBeers(String beerName, BeerStyle beerStyle, Boolean showInventory, Integer pageNumber, Integer pageSize);
+    Page<BeerDTO> getListOfBeers(String beerName, BeerStyle beerStyle, Boolean showInventory, Integer pageNumber, Integer pageSize);
 
     Optional<BeerDTO> getBeerById(UUID id);
 

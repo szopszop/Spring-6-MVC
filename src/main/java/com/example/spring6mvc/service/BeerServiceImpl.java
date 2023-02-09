@@ -3,6 +3,8 @@ package com.example.spring6mvc.service;
 import com.example.spring6mvc.model.BeerDTO;
 import com.example.spring6mvc.model.BeerStyle;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -63,8 +65,8 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public List<BeerDTO> getListOfBeers(String beerName, BeerStyle beerStyle, Boolean showInventory, Integer pageNumber, Integer pageSize){
-        return new ArrayList<>(beerMap.values());
+    public Page<BeerDTO> getListOfBeers(String beerName, BeerStyle beerStyle, Boolean showInventory, Integer pageNumber, Integer pageSize){
+        return new PageImpl<>(new ArrayList<>(beerMap.values()));
     }
 
     @Override
