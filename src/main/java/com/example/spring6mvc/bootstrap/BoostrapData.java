@@ -3,23 +3,19 @@ package com.example.spring6mvc.bootstrap;
 import com.example.spring6mvc.enteties.Beer;
 import com.example.spring6mvc.enteties.Customer;
 import com.example.spring6mvc.model.BeerCSVRecord;
-import com.example.spring6mvc.model.BeerDTO;
 import com.example.spring6mvc.model.BeerStyle;
-import com.example.spring6mvc.model.CustomerDTO;
 import com.example.spring6mvc.repositories.BeerRepository;
 import com.example.spring6mvc.repositories.CustomerRepository;
 import com.example.spring6mvc.service.BeerCSVService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.ResourceUtils;
-
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
