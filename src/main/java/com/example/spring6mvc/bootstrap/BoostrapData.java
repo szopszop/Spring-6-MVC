@@ -38,9 +38,9 @@ public class BoostrapData implements CommandLineRunner {
     @Transactional
     @Override
     public void run(String... args) throws Exception {
+        loadBeerData();
         loadCustomerData();
         loadScvData();
-        loadBeerData();
     }
 
     private void loadScvData() throws FileNotFoundException {

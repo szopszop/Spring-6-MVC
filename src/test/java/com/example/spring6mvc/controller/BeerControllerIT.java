@@ -64,7 +64,9 @@ class BeerControllerIT {
     @Test
     void sizeOfRepositoryShouldBeEqualTo3() {
         List<BeerDTO> dtos = beerController.getAllBeers();
-        assertThat(dtos.size()).isEqualTo(3);
+        int csvFileSize = 2410;
+        int staticData = 3;
+        assertThat(dtos.size()).isEqualTo(csvFileSize + staticData);
     }
 
 
