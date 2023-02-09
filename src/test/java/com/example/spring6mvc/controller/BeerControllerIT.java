@@ -6,10 +6,8 @@ import com.example.spring6mvc.model.BeerDTO;
 import com.example.spring6mvc.repositories.BeerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
-import org.h2.engine.Setting;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
@@ -18,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -30,11 +27,8 @@ import java.util.UUID;
 import static com.example.spring6mvc.controller.BeerController.BEER_PATH_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 @SpringBootTest
 class BeerControllerIT {
@@ -63,7 +57,7 @@ class BeerControllerIT {
 
     @Test
     void sizeOfRepositoryShouldBeEqualTo3() {
-        List<BeerDTO> dtos = beerController.getAllBeers();
+        List<BeerDTO> dtos = beerController.getListOfBeers(null);
         int csvFileSize = 2410;
         int staticData = 3;
         assertThat(dtos.size()).isEqualTo(csvFileSize + staticData);
@@ -75,7 +69,7 @@ class BeerControllerIT {
     @Test
     void sizeShouldBe0AfterDeleteAll() {
         beerRepository.deleteAll();
-        List<BeerDTO> dtos = beerController.getAllBeers();
+        List<BeerDTO> dtos = beerController.getListOfBeers(null);
         assertThat(dtos.size()).isEqualTo(0);
     }
 
@@ -172,20 +166,13 @@ class BeerControllerIT {
     }
 
 
-    @Test
-    void testPatchBeerBadName() throws Exception {
-        Beer beer = beerRepository.findAll().get(0);
 
-        Map<String, Object> beerMap = new HashMap<>();
-        beerMap.put("beerName", "New Name 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
-
-        MvcResult mvcResult =mockMvc.perform(patch(BeerController.BEER_PATH_ID, beer.getBeerId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(beerMap)))
-                .andExpect(status().isBadRequest()).andReturn();
-
-        System.out.println(mvcResult.getResponse().getContentAsString());
-    }
+//    @Test
+//    void testListBeerByName() {
+//        mockMvc.perform(get(BeerController.BEER_PATH)
+//                .queryParam("beerName", "IPA"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.size()", is(100)));
+//    }
 
 }

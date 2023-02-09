@@ -1,5 +1,6 @@
 package com.example.spring6mvc.service;
 
+import com.example.spring6mvc.enteties.Beer;
 import com.example.spring6mvc.mappers.BeerMapper;
 import com.example.spring6mvc.model.BeerDTO;
 import com.example.spring6mvc.repositories.BeerRepository;
@@ -22,11 +23,20 @@ public class BeerServiceJPA implements BeerService {
 
 
     @Override
-    public List<BeerDTO> getAllBeers() {
-        return beerRepository.findAll()
-                .stream()
+    public List<BeerDTO> getListOfBeers(String beerName) {
+        List<Beer> beerList;
+        if (StringUtils.hasText(beerName)){
+            beerList = listOfBeersByName(beerName);
+        } else {
+            beerList = beerRepository.findAll();
+        }
+        return beerList.stream()
                 .map(beerMapper::beerToBeerDto)
                 .collect(Collectors.toList());
+    }
+
+    List<Beer> listOfBeersByName(String beerName) {
+        return new ArrayList<>();
     }
 
     @Override
