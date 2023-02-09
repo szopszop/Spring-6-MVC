@@ -2,18 +2,28 @@ package com.example.spring6mvc.bootstrap;
 
 import com.example.spring6mvc.enteties.Beer;
 import com.example.spring6mvc.enteties.Customer;
+import com.example.spring6mvc.model.BeerCSVRecord;
 import com.example.spring6mvc.model.BeerDTO;
 import com.example.spring6mvc.model.BeerStyle;
 import com.example.spring6mvc.model.CustomerDTO;
 import com.example.spring6mvc.repositories.BeerRepository;
 import com.example.spring6mvc.repositories.CustomerRepository;
+import com.example.spring6mvc.service.BeerCSVService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.ResourceUtils;
 
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -23,11 +33,43 @@ public class BoostrapData implements CommandLineRunner {
 
     private final BeerRepository beerRepository;
     private final CustomerRepository customerRepository;
+    private final BeerCSVService beerCSVService;
 
+    @Transactional
     @Override
     public void run(String... args) throws Exception {
         loadCustomerData();
+        loadScvData();
         loadBeerData();
+    }
+
+    private void loadScvData() throws FileNotFoundException {
+        if (beerRepository.count() < 10) {
+            File file = ResourceUtils.getFile("classpath:csvdata/beers.csv");
+            List<BeerCSVRecord> records = beerCSVService.convertCSV(file);
+            records.forEach(beerCSVRecord -> {
+                BeerStyle beerStyle = switch (beerCSVRecord.getStyle()) {
+                    case "American Pale Lager" -> BeerStyle.LAGER;
+                    case "American Pale Ale (APA)", "American Black Ale", "Belgian Dark Ale", "American Blonde Ale" ->
+                            BeerStyle.ALE;
+                    case "American IPA", "American Double / Imperial IPA", "Belgian IPA" -> BeerStyle.IPA;
+                    case "American Porter" -> BeerStyle.PORTER;
+                    case "Oatmeal Stout", "American Stout" -> BeerStyle.STOUT;
+                    case "Saison / Farmhouse Ale" -> BeerStyle.SAISON;
+                    case "Fruit / Vegetable Beer", "Winter Warmer", "Berliner Weissbier" -> BeerStyle.WHEAT;
+                    case "English Pale Ale" -> BeerStyle.PALE_ALE;
+                    default -> BeerStyle.PILSNER;
+                };
+
+                beerRepository.save(Beer.builder()
+                        .beerName(StringUtils.abbreviate(beerCSVRecord.getBeer(), 50))
+                        .beerStyle(beerStyle)
+                        .price(BigDecimal.TEN)
+                        .upc(beerCSVRecord.getRow().toString())
+                        .quantityOnHand(beerCSVRecord.getCount())
+                        .build());
+            });
+        }
     }
 
     public void loadBeerData() {
@@ -83,7 +125,7 @@ public class BoostrapData implements CommandLineRunner {
             Customer customer1 = Customer.builder()
                     .customerId(UUID.randomUUID())
                     .customerName("Customer 1")
-                    .version(1L)
+                    .version(1)
                     .createDate(LocalDateTime.now())
                     .updateDate(LocalDateTime.now())
                     .build();
@@ -91,7 +133,7 @@ public class BoostrapData implements CommandLineRunner {
             Customer customer2 = Customer.builder()
                     .customerId(UUID.randomUUID())
                     .customerName("Customer 2")
-                    .version(1L)
+                    .version(1)
                     .createDate(LocalDateTime.now())
                     .updateDate(LocalDateTime.now())
                     .build();
@@ -99,7 +141,7 @@ public class BoostrapData implements CommandLineRunner {
             Customer customer3 = Customer.builder()
                     .customerId(UUID.randomUUID())
                     .customerName("Customer 3")
-                    .version(1L)
+                    .version(1)
                     .createDate(LocalDateTime.now())
                     .updateDate(LocalDateTime.now())
                     .build();
