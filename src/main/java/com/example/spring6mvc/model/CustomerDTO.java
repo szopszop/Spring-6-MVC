@@ -10,9 +10,10 @@ import java.util.UUID;
 @Builder
 public class CustomerDTO {
 
-    UUID customerId;
-    String customerName;
-    Long version;
-    LocalDateTime createDate;
-    LocalDateTime updateDate;
+    private UUID customerId;
+
+    private String customerName;
+    private Integer version;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
 }

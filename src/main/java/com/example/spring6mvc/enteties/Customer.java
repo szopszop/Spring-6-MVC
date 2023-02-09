@@ -22,13 +22,14 @@ public class Customer {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @JdbcTypeCode(SqlTypes.CHAR)
     @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
-    UUID customerId;
-
+    private UUID customerId;
 
     @Version
-    Long version;
+    Integer version;
 
-    String customerName;
-    LocalDateTime createDate;
-    LocalDateTime updateDate;
+    private String customerEmail;
+
+    private String customerName;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
 }
