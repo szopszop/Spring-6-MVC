@@ -54,7 +54,8 @@ class BeerControllerTest {
 
     @Test
     void shouldReturnBeer() throws Exception {
-        BeerDTO testBeer = beerServiceImpl.getListOfBeers(null, null, false).get(0);
+        BeerDTO testBeer = beerServiceImpl.getListOfBeers(
+                null, null, false, null, null).get(0);
         given(beerService.getBeerById(testBeer.getBeerId())).willReturn(Optional.of(testBeer));
         mockMvc.perform(get( BEER_PATH_ID, testBeer.getBeerId())
                 .accept(MediaType.APPLICATION_JSON))
@@ -67,20 +68,21 @@ class BeerControllerTest {
 
     @Test
     void shouldReturnAllBeers() throws Exception {
-        given(beerService.getListOfBeers(any(), any(), any() )).willReturn(beerServiceImpl.getListOfBeers(null, null, false));
+        given(beerService.getListOfBeers(any(), any(), any(), null, null)).willReturn(
+                beerServiceImpl.getListOfBeers(null, null, false, null, 25));
         mockMvc.perform(get(BEER_PATH)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()", is(3)));
+                .andExpect(jsonPath("$.length()", is(25)));
     }
 
     @Test
     void shouldCreateNewBeer() throws Exception {
-        BeerDTO beer = beerServiceImpl.getListOfBeers(null, null, false).get(0);
+        BeerDTO beer = beerServiceImpl.getListOfBeers(null, null, false, null, null).get(0);
         beer.setVersion(null);
         beer.setBeerId(null);
-        given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.getListOfBeers(null, null, false).get(1));
+        given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.getListOfBeers(null, null, false, 1, 25).get(1));
 
         mockMvc.perform(post(BEER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
@@ -118,7 +120,7 @@ class BeerControllerTest {
     }
     @Test
     void shouldSendBadRequestAfterUpdatingBeerWithBlankName() throws Exception {
-        BeerDTO beerDTO = beerServiceImpl.getListOfBeers(null, null, false).get(0);
+        BeerDTO beerDTO = beerServiceImpl.getListOfBeers(null, null, false, 1, 25).get(0);
         beerDTO.setBeerName(" ");
         given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beerDTO));
 
@@ -133,7 +135,7 @@ class BeerControllerTest {
 
     @Test
     void shouldSendBadRequestAfterUpdatingBeerWithNullUpc() throws Exception {
-        BeerDTO beerDTO = beerServiceImpl.getListOfBeers(null, null, false).get(0);
+        BeerDTO beerDTO = beerServiceImpl.getListOfBeers(null, null, false, 1, 25).get(0);
         beerDTO.setUpc(" ");
         given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beerDTO));
 
@@ -148,7 +150,7 @@ class BeerControllerTest {
 
     @Test
     void shouldUpdateBeer() throws Exception {
-        BeerDTO beer = beerServiceImpl.getListOfBeers(null, null, false).get(0);
+        BeerDTO beer = beerServiceImpl.getListOfBeers(null, null, false, 1, 25).get(0);
         given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
 
         mockMvc.perform(put(BEER_PATH_ID, beer.getBeerId())
@@ -162,7 +164,7 @@ class BeerControllerTest {
 
     @Test
     void checkIf_UUID_IsProperlyPassed() throws Exception {
-        BeerDTO beer = beerServiceImpl.getListOfBeers(null, null, false).get(0);
+        BeerDTO beer = beerServiceImpl.getListOfBeers(null, null, false, 1, 25).get(0);
         given(beerService.deleteBeerById(any())).willReturn(true);
         mockMvc.perform(delete(BEER_PATH_ID, beer.getBeerId())
                 .accept(MediaType.APPLICATION_JSON))
@@ -175,7 +177,7 @@ class BeerControllerTest {
 
     @Test
     void testPatchBeer() throws Exception {
-        BeerDTO beerDTO = beerServiceImpl.getListOfBeers(null, null, false).get(0);
+        BeerDTO beerDTO = beerServiceImpl.getListOfBeers(null, null, false, 1, 25).get(0);
 
         Map<String, Object> beerMap = new HashMap<>();
         beerMap.put("beerName", "New Name");

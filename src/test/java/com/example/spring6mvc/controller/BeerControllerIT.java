@@ -7,7 +7,6 @@ import com.example.spring6mvc.model.BeerStyle;
 import com.example.spring6mvc.repositories.BeerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
-import org.hamcrest.core.IsNot;
 import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,7 +67,7 @@ class BeerControllerIT {
 
     @Test
     void sizeOfRepositoryShouldBeEqualTo3() {
-        List<BeerDTO> dtos = beerController.getListOfBeers(null, null, false);
+        List<BeerDTO> dtos = beerController.getListOfBeers(null, null, false, 1, 25);
         int csvFileSize = 2410;
         int staticData = 3;
         assertThat(dtos.size()).isEqualTo(csvFileSize + staticData);
@@ -80,7 +79,7 @@ class BeerControllerIT {
     @Test
     void sizeShouldBe0AfterDeleteAll() {
         beerRepository.deleteAll();
-        List<BeerDTO> dtos = beerController.getListOfBeers(null, null, false);
+        List<BeerDTO> dtos = beerController.getListOfBeers(null, null, false, 1, 25);
         assertThat(dtos.size()).isEqualTo(0);
     }
 
@@ -214,5 +213,18 @@ class BeerControllerIT {
                 .andExpect(jsonPath("$.size()", is(310)))
                 .andExpect(jsonPath("$.[0].quantityOnHand").value(IsNull.notNullValue()));
     }
+
+//    @Test
+//    void testListBeersByStyleAndNameShowInventoryTrue2() throws Exception {
+//        mockMvc.perform(get(BeerController.BEER_PATH)
+//                        .queryParam("beerName", "IPA")
+//                        .queryParam("beerStyle", BeerStyle.IPA.name())
+//                        .queryParam("showInventory", "true")
+//                        .queryParam("pageNumber", "2")
+//                        .queryParam("pageSize", is(50)))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.size()", is(310)))
+//                .andExpect(jsonPath("$.[0].quantityOnHand").value(IsNull.notNullValue()));
+//    }
 
 }
