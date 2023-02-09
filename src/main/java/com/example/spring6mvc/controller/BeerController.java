@@ -1,6 +1,7 @@
 package com.example.spring6mvc.controller;
 
 import com.example.spring6mvc.model.BeerDTO;
+import com.example.spring6mvc.model.BeerStyle;
 import com.example.spring6mvc.service.BeerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +25,10 @@ public class BeerController {
     private final BeerService beerService;
 
     @GetMapping(BEER_PATH)
-    public List<BeerDTO> getListOfBeers(@RequestParam(required = false) String beerName){
-        return beerService.getListOfBeers(beerName);
+    public List<BeerDTO> getListOfBeers(@RequestParam(required = false) String beerName,
+                                        @RequestParam(required = false) BeerStyle beerStyle,
+                                        @RequestParam(required = false) Boolean showInventory){
+        return beerService.getListOfBeers(beerName, beerStyle, showInventory);
     }
 
 
