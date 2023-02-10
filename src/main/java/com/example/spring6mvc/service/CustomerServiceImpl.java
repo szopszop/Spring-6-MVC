@@ -16,7 +16,7 @@ public class CustomerServiceImpl implements CustomerService {
         this.customerMap = new HashMap<>();
 
         CustomerDTO customer1 = CustomerDTO.builder()
-                .customerId(UUID.randomUUID())
+                .id(UUID.randomUUID())
                 .customerName("Customer 1")
                 .version(1)
                 .createDate(LocalDateTime.now())
@@ -24,7 +24,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .build();
 
         CustomerDTO customer2 = CustomerDTO.builder()
-                .customerId(UUID.randomUUID())
+                .id(UUID.randomUUID())
                 .customerName("Customer 2")
                 .version(1)
                 .createDate(LocalDateTime.now())
@@ -32,16 +32,16 @@ public class CustomerServiceImpl implements CustomerService {
                 .build();
 
         CustomerDTO customer3 = CustomerDTO.builder()
-                .customerId(UUID.randomUUID())
+                .id(UUID.randomUUID())
                 .customerName("Customer 3")
                 .version(1)
                 .createDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
                 .build();
 
-        customerMap.put(customer1.getCustomerId(), customer1);
-        customerMap.put(customer2.getCustomerId(), customer2);
-        customerMap.put(customer3.getCustomerId(), customer3);
+        customerMap.put(customer1.getId(), customer1);
+        customerMap.put(customer2.getId(), customer2);
+        customerMap.put(customer3.getId(), customer3);
     }
 
     @Override
@@ -57,14 +57,14 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO saveNewCustomer(CustomerDTO customer) {
         CustomerDTO newCustomer = CustomerDTO.builder()
-                .customerId(UUID.randomUUID())
+                .id(UUID.randomUUID())
                 .customerName("New Customer")
                 .version(12333)
                 .createDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
                 .build();
 
-        customerMap.put(newCustomer.getCustomerId(), customer);
+        customerMap.put(newCustomer.getId(), customer);
         return newCustomer;
     }
 
@@ -75,7 +75,7 @@ public class CustomerServiceImpl implements CustomerService {
         existingCustomer.setVersion(dto.getVersion());
         existingCustomer.setUpdateDate(LocalDateTime.now());
 
-        customerMap.put(existingCustomer.getCustomerId(), existingCustomer);
+        customerMap.put(existingCustomer.getId(), existingCustomer);
         return Optional.of(existingCustomer);
     }
 

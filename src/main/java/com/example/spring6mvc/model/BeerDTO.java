@@ -14,7 +14,7 @@ import java.util.UUID;
 @Data
 @ToString
 public class BeerDTO {
-    private UUID beerId;
+    private UUID id;
     private Integer version;
 
     @NotBlank

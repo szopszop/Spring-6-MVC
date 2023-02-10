@@ -53,7 +53,7 @@ class CustomerControllerIT {
     @Test
     void getCustomerByIdShouldReturnCustomer() {
         Customer customer = customerRepository.findAll().get(0);
-        CustomerDTO customerDTO = customerController.getCustomerById(customer.getCustomerId());
+        CustomerDTO customerDTO = customerController.getCustomerById(customer.getId());
         assertThat(customerDTO).isNotNull();
     }
 
@@ -82,15 +82,15 @@ class CustomerControllerIT {
     void shouldUpdateExisingCustomer() {
         Customer customer = customerRepository.findAll().get(0);
         CustomerDTO customerDTO = customerMapper.customerToCustomerDto(customer);
-        customerDTO.setCustomerId(null);
+        customerDTO.setId(null);
         customerDTO.setVersion(null);
         final String customerName = "UPDATED";
         customerDTO.setCustomerName(customerName);
 
-        ResponseEntity responseEntity = customerController.updateCustomerById(customer.getCustomerId(), customerDTO);
+        ResponseEntity responseEntity = customerController.updateCustomerById(customer.getId(), customerDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
-        Customer updatedCustomer = customerRepository.findById(customer.getCustomerId()).get();
+        Customer updatedCustomer = customerRepository.findById(customer.getId()).get();
         assertThat(updatedCustomer.getCustomerName()).isEqualTo(customerName);
     }
 
@@ -106,8 +106,8 @@ class CustomerControllerIT {
     @Test
     void deleteExistingCustomerWorks() {
         Customer customer = customerRepository.findAll().get(0);
-        ResponseEntity responseEntity = customerController.deleteCustomerById(customer.getCustomerId());
-        assertThat(customerRepository.findById(customer.getCustomerId())).isEmpty();
+        ResponseEntity responseEntity = customerController.deleteCustomerById(customer.getId());
+        assertThat(customerRepository.findById(customer.getId())).isEmpty();
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
     }
 

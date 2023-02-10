@@ -51,13 +51,13 @@ class CustomerControllerTest {
     void shouldReturnCustomer() throws Exception {
         CustomerDTO testCustomer = customerServiceImpl.getAllCustomers().get(0);
 
-        given(customerService.getCustomerById(testCustomer.getCustomerId())).willReturn(Optional.of(testCustomer));
+        given(customerService.getCustomerById(testCustomer.getId())).willReturn(Optional.of(testCustomer));
 
-        mockMvc.perform(get(CUSTOMER_PATH_ID, testCustomer.getCustomerId())
+        mockMvc.perform(get(CUSTOMER_PATH_ID, testCustomer.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.customerId", is(testCustomer.getCustomerId().toString())))
+                .andExpect(jsonPath("$.id", is(testCustomer.getId().toString())))
                 .andExpect(jsonPath("$.customerName", is(testCustomer.getCustomerName())));
     }
 
@@ -75,7 +75,7 @@ class CustomerControllerTest {
     void shouldCreateNewCustomer() throws Exception {
         CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
         customer.setVersion(null);
-        customer.setCustomerId(null);
+        customer.setId(null);
         given(customerService.saveNewCustomer(any(CustomerDTO.class))).willReturn(customerServiceImpl.getAllCustomers().get(1));
 
         mockMvc.perform(post(CUSTOMER_PATH)
@@ -91,7 +91,7 @@ class CustomerControllerTest {
     void shouldUpdateCustomer() throws Exception{
         CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
         given(customerService.updateCustomerById(any(), any())).willReturn(Optional.of(customer));
-        mockMvc.perform(put(CUSTOMER_PATH_ID, customer.getCustomerId())
+        mockMvc.perform(put(CUSTOMER_PATH_ID, customer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
@@ -104,13 +104,13 @@ class CustomerControllerTest {
     void checkIf_UUID_IsProperlyPassed() throws Exception {
         CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
         given(customerService.deleteById(any())).willReturn(true);
-        mockMvc.perform(delete(CUSTOMER_PATH_ID, customer.getCustomerId())
+        mockMvc.perform(delete(CUSTOMER_PATH_ID, customer.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
         verify(customerService).deleteById(uuidArgumentCaptor.capture());
 
-        assertThat(customer.getCustomerId()).isEqualTo(uuidArgumentCaptor.getValue());
+        assertThat(customer.getId()).isEqualTo(uuidArgumentCaptor.getValue());
     }
 
     @Test

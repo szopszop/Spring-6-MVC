@@ -82,7 +82,7 @@ class BeerControllerIT {
     @Test
     void getBeerByIdShouldReturnBeer() {
         Beer beer = beerRepository.findAll().get(0);
-        BeerDTO dto = beerController.getBeerById(beer.getBeerId());
+        BeerDTO dto = beerController.getBeerById(beer.getId());
 
         assertThat(dto).isNotNull();
     }
@@ -118,15 +118,15 @@ class BeerControllerIT {
     void shouldUpdateExisingBeer() {
         Beer beer = beerRepository.findAll().get(0);
         BeerDTO beerDTO = beerMapper.beerToBeerDto(beer);
-        beerDTO.setBeerId(null);
+        beerDTO.setId(null);
         beerDTO.setVersion(null);
         final String beerName = "UPDATED";
         beerDTO.setBeerName(beerName);
 
-        ResponseEntity responseEntity = beerController.updateBeerById(beer.getBeerId(), beerDTO);
+        ResponseEntity responseEntity = beerController.updateBeerById(beer.getId(), beerDTO);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
-        Beer updatedBeer = beerRepository.findById(beer.getBeerId()).get();
+        Beer updatedBeer = beerRepository.findById(beer.getId()).get();
         assertThat(updatedBeer.getBeerName()).isEqualTo(beerName);
     }
 
@@ -142,8 +142,8 @@ class BeerControllerIT {
     @Test
     void deleteExistingBeerWorks() {
         Beer beer = beerRepository.findAll().get(0);
-        ResponseEntity responseEntity = beerController.deleteBeerById(beer.getBeerId());
-        assertThat(beerRepository.findById(beer.getBeerId()).isEmpty());
+        ResponseEntity responseEntity = beerController.deleteBeerById(beer.getId());
+        assertThat(beerRepository.findById(beer.getId()).isEmpty());
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
 
     }
@@ -160,7 +160,7 @@ class BeerControllerIT {
         Beer beer = beerRepository.findAll().get(0);
         Map<String, Object> mapToPatch = new HashMap<>();
         mapToPatch.put("beerName", "TooLongNameTooLongNameTooLongNameTooLongNameTooLongNameTooLongNameTooLongName");
-        MvcResult mvcResult = mockMvc.perform(patch(BEER_PATH_ID, beer.getBeerId())
+        MvcResult mvcResult = mockMvc.perform(patch(BEER_PATH_ID, beer.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(mapToPatch)))

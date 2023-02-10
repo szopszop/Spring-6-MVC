@@ -23,7 +23,7 @@ public class BeerServiceImpl implements BeerService {
 
 
         BeerDTO beer1 = BeerDTO.builder()
-                .beerId(UUID.randomUUID())
+                .id(UUID.randomUUID())
                 .version(1)
                 .beerName("Galaxy Cat")
                 .beerStyle(BeerStyle.PALE_ALE)
@@ -35,7 +35,7 @@ public class BeerServiceImpl implements BeerService {
                 .build();
 
         BeerDTO beer2 = BeerDTO.builder()
-                .beerId(UUID.randomUUID())
+                .id(UUID.randomUUID())
                 .version(1)
                 .beerName("Crank")
                 .beerStyle(BeerStyle.PALE_ALE)
@@ -47,7 +47,7 @@ public class BeerServiceImpl implements BeerService {
                 .build();
 
         BeerDTO beer3 = BeerDTO.builder()
-                .beerId(UUID.randomUUID())
+                .id(UUID.randomUUID())
                 .version(1)
                 .beerName("Sunshine City")
                 .beerStyle(BeerStyle.IPA)
@@ -58,9 +58,9 @@ public class BeerServiceImpl implements BeerService {
                 .updateDate(LocalDateTime.now())
                 .build();
 
-        beerMap.put(beer1.getBeerId(), beer1);
-        beerMap.put(beer2.getBeerId(), beer2);
-        beerMap.put(beer3.getBeerId(), beer3);
+        beerMap.put(beer1.getId(), beer1);
+        beerMap.put(beer2.getId(), beer2);
+        beerMap.put(beer3.getId(), beer3);
 
     }
 
@@ -80,7 +80,7 @@ public class BeerServiceImpl implements BeerService {
     @Override
     public BeerDTO saveNewBeer(BeerDTO beer) {
         BeerDTO beerToSave =  BeerDTO.builder()
-                .beerId(UUID.randomUUID())
+                .id(UUID.randomUUID())
                 .beerName(beer.getBeerName())
                 .createdDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
@@ -90,7 +90,7 @@ public class BeerServiceImpl implements BeerService {
                 .price(beer.getPrice())
                 .build();
 
-        beerMap.put(beerToSave.getBeerId(), beerToSave);
+        beerMap.put(beerToSave.getId(), beerToSave);
         return beerToSave;
     }
 
@@ -102,7 +102,7 @@ public class BeerServiceImpl implements BeerService {
         existingBeer.setUpc(dto.getUpc());
         existingBeer.setUpdateDate(LocalDateTime.now());
 
-        beerMap.put(existingBeer.getBeerId(), existingBeer);
+        beerMap.put(existingBeer.getId(), existingBeer);
         return Optional.of(existingBeer);
     }
 

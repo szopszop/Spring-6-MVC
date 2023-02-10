@@ -72,7 +72,7 @@ public class BoostrapData implements CommandLineRunner {
         if (beerRepository.count() == 0) {
 
             Beer beer1 = Beer.builder()
-                    .beerId(UUID.randomUUID())
+                    .id(UUID.randomUUID())
                     .version(1)
                     .beerName("Galaxy Cat")
                     .beerStyle(BeerStyle.PALE_ALE)
@@ -84,7 +84,7 @@ public class BoostrapData implements CommandLineRunner {
                     .build();
 
             Beer beer2 = Beer.builder()
-                    .beerId(UUID.randomUUID())
+                    .id(UUID.randomUUID())
                     .version(1)
                     .beerName("Crank")
                     .beerStyle(BeerStyle.PALE_ALE)
@@ -96,7 +96,7 @@ public class BoostrapData implements CommandLineRunner {
                     .build();
 
             Beer beer3 = Beer.builder()
-                    .beerId(UUID.randomUUID())
+                    .id(UUID.randomUUID())
                     .version(1)
                     .beerName("Sunshine City")
                     .beerStyle(BeerStyle.IPA)
@@ -119,7 +119,7 @@ public class BoostrapData implements CommandLineRunner {
 
         if (customerRepository.count() == 0) {
             Customer customer1 = Customer.builder()
-                    .customerId(UUID.randomUUID())
+                    .id(UUID.randomUUID())
                     .customerName("Customer 1")
                     .version(1)
                     .createDate(LocalDateTime.now())
@@ -127,7 +127,7 @@ public class BoostrapData implements CommandLineRunner {
                     .build();
 
             Customer customer2 = Customer.builder()
-                    .customerId(UUID.randomUUID())
+                    .id(UUID.randomUUID())
                     .customerName("Customer 2")
                     .version(1)
                     .createDate(LocalDateTime.now())
@@ -135,7 +135,7 @@ public class BoostrapData implements CommandLineRunner {
                     .build();
 
             Customer customer3 = Customer.builder()
-                    .customerId(UUID.randomUUID())
+                    .id(UUID.randomUUID())
                     .customerName("Customer 3")
                     .version(1)
                     .createDate(LocalDateTime.now())
