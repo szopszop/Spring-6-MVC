@@ -2,6 +2,7 @@ package com.example.spring6mvc.repositories;
 
 import com.example.spring6mvc.enteties.Beer;
 import com.example.spring6mvc.enteties.BeerOrder;
+import com.example.spring6mvc.enteties.BeerOrderShipment;
 import com.example.spring6mvc.enteties.Customer;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,9 @@ class BeerOrderRepositoryTest {
         BeerOrder beerOrder = BeerOrder.builder()
                 .customerRef("Test order")
                 .customer(testCustomer)
+                .beerOrderShipment(BeerOrderShipment.builder()
+                        .trackingNumber("12342r")
+                        .build())
                 .build();
 
         BeerOrder savedBeerOrder = beerOrderRepository.saveAndFlush(beerOrder);
