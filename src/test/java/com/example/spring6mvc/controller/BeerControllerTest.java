@@ -2,6 +2,7 @@ package com.example.spring6mvc.controller;
 
 import com.example.spring6mvc.config.SpringSecurityConfig;
 import com.example.spring6mvc.model.BeerDTO;
+import com.example.spring6mvc.model.BeerStyle;
 import com.example.spring6mvc.service.BeerService;
 import com.example.spring6mvc.service.BeerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -27,6 +29,7 @@ import static com.example.spring6mvc.controller.BeerController.BEER_PATH;
 import static com.example.spring6mvc.controller.BeerController.BEER_PATH_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -62,6 +65,9 @@ class BeerControllerTest {
     void setUp() {
         beerServiceImpl = new BeerServiceImpl();
     }
+
+
+
 
     @Test
     void shouldReturnBeer() throws Exception {

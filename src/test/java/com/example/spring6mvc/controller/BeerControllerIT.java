@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -26,10 +27,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.example.spring6mvc.controller.BeerController.BEER_PATH;
 import static com.example.spring6mvc.controller.BeerController.BEER_PATH_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -63,6 +66,15 @@ class BeerControllerIT {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(springSecurity())
                 .build();
+    }
+
+    @Test
+    void testNoAuth() throws Exception {
+            mockMvc.perform(get(BeerController.BEER_PATH)
+                            .queryParam("beerStyle", BeerStyle.IPA.name())
+                            .queryParam("pageSize", "800"))
+                    .andExpect(status().isUnauthorized());
+
     }
 
     @Test
@@ -164,6 +176,7 @@ class BeerControllerIT {
         Map<String, Object> mapToPatch = new HashMap<>();
         mapToPatch.put("beerName", "TooLongNameTooLongNameTooLongNameTooLongNameTooLongNameTooLongNameTooLongName");
         MvcResult mvcResult = mockMvc.perform(patch(BEER_PATH_ID, beer.getId())
+                        .with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(mapToPatch)))
@@ -177,6 +190,7 @@ class BeerControllerIT {
     void testListBeerByName() throws Exception {
         int numberOfIpaBeersNamesInRepo = 336;
         mockMvc.perform(get(BeerController.BEER_PATH)
+                        .with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
                         .queryParam("beerName", "IPA")
                         .queryParam("pageSize", "800"))
                 .andExpect(status().isOk())
@@ -187,6 +201,7 @@ class BeerControllerIT {
     void testListBeersByStyle() throws Exception {
         int numberOfIpaBeersEnumsInRepo = 548;
         mockMvc.perform(get(BeerController.BEER_PATH)
+                        .with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
                         .queryParam("beerStyle", BeerStyle.IPA.name())
                         .queryParam("pageSize", "800"))
                 .andExpect(status().isOk())
@@ -197,6 +212,7 @@ class BeerControllerIT {
     void testListBeersByStyleAndNameShowInventoryFalse() throws Exception {
         int numberOfIpaBeersEnumsInRepo = 310;
         mockMvc.perform(get(BeerController.BEER_PATH)
+                        .with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
                         .queryParam("beerName", "IPA")
                         .queryParam("beerStyle", BeerStyle.IPA.name())
                         .queryParam("showInventory", "false")
@@ -210,6 +226,7 @@ class BeerControllerIT {
     void testListBeersByStyleAndNameShowInventoryTrue() throws Exception {
         int numberOfIpaBeersEnumsInRepo = 310;
         mockMvc.perform(get(BeerController.BEER_PATH)
+                        .with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
                         .queryParam("beerName", "IPA")
                         .queryParam("beerStyle", BeerStyle.IPA.name())
                         .queryParam("showInventory", "true")
@@ -221,6 +238,7 @@ class BeerControllerIT {
     @Test
     void tesListBeersByStyleAndNameShowInventoryTruePage2() throws Exception {
         mockMvc.perform(get(BeerController.BEER_PATH)
+                        .with(httpBasic(BeerControllerTest.USERNAME, BeerControllerTest.PASSWORD))
                         .queryParam("beerName", "IPA")
                         .queryParam("beerStyle", BeerStyle.IPA.name())
                         .queryParam("showInventory", "true")
