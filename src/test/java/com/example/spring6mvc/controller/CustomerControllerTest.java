@@ -20,6 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.example.spring6mvc.controller.BeerControllerTest.PASSWORD;
+import static com.example.spring6mvc.controller.BeerControllerTest.USERNAME;
 import static com.example.spring6mvc.controller.CustomerController.CUSTOMER_PATH;
 import static com.example.spring6mvc.controller.CustomerController.CUSTOMER_PATH_ID;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,15 +47,9 @@ class CustomerControllerTest {
     ArgumentCaptor<UUID> uuidArgumentCaptor;
     CustomerServiceImpl customerServiceImpl;
 
-    @Value("${spring.security.user.name}")
-    String username = "user1";
-    @Value("${spring.security.user.password}")
-    String password = "password";
-
-
 
     @BeforeEach
-            void setUp() {
+    void setUp() {
         customerServiceImpl = new CustomerServiceImpl();
     }
 
@@ -64,7 +60,7 @@ class CustomerControllerTest {
         given(customerService.getCustomerById(testCustomer.getId())).willReturn(Optional.of(testCustomer));
 
         mockMvc.perform(get(CUSTOMER_PATH_ID, testCustomer.getId())
-                        .with (httpBasic(username, password))
+                        .with(httpBasic(USERNAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -76,7 +72,7 @@ class CustomerControllerTest {
     void shouldReturnAllCustomers() throws Exception {
         given(customerService.getAllCustomers()).willReturn(customerServiceImpl.getAllCustomers());
         mockMvc.perform(get(CUSTOMER_PATH)
-                        .with (httpBasic(username, password))
+                        .with(httpBasic(USERNAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -91,7 +87,7 @@ class CustomerControllerTest {
         given(customerService.saveNewCustomer(any(CustomerDTO.class))).willReturn(customerServiceImpl.getAllCustomers().get(1));
 
         mockMvc.perform(post(CUSTOMER_PATH)
-                        .with (httpBasic(username, password))
+                        .with(httpBasic(USERNAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customer)))
@@ -101,14 +97,14 @@ class CustomerControllerTest {
     }
 
     @Test
-    void shouldUpdateCustomer() throws Exception{
+    void shouldUpdateCustomer() throws Exception {
         CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
         given(customerService.updateCustomerById(any(), any())).willReturn(Optional.of(customer));
         mockMvc.perform(put(CUSTOMER_PATH_ID, customer.getId())
-                        .with (httpBasic(username, password))
+                        .with(httpBasic(USERNAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(customer)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(customer)))
                 .andExpect(status().isNoContent());
 
         verify(customerService).updateCustomerById(any(UUID.class), any(CustomerDTO.class));
@@ -119,7 +115,7 @@ class CustomerControllerTest {
         CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
         given(customerService.deleteById(any())).willReturn(true);
         mockMvc.perform(delete(CUSTOMER_PATH_ID, customer.getId())
-                        .with (httpBasic(username, password))
+                        .with(httpBasic(USERNAME, PASSWORD))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -129,7 +125,7 @@ class CustomerControllerTest {
     }
 
     @Test
-    void getCustomerByIdNotFound() throws Exception{
+    void getCustomerByIdNotFound() throws Exception {
 
         given(customerService.getCustomerById(any(UUID.class))).willThrow(NotFoundException.class);
 
