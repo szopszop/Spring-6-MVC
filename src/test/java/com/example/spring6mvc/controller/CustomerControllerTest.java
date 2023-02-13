@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -42,10 +43,15 @@ class CustomerControllerTest {
     CustomerService customerService;
     @Captor
     ArgumentCaptor<UUID> uuidArgumentCaptor;
-    @Captor
-    ArgumentCaptor<CustomerDTO> customerArgumentCaptor;
-
     CustomerServiceImpl customerServiceImpl;
+
+    @Value("${spring.security.user.name}")
+    String username = "user1";
+    @Value("${spring.security.user.password}")
+    String password = "password";
+
+
+
     @BeforeEach
             void setUp() {
         customerServiceImpl = new CustomerServiceImpl();
@@ -58,7 +64,7 @@ class CustomerControllerTest {
         given(customerService.getCustomerById(testCustomer.getId())).willReturn(Optional.of(testCustomer));
 
         mockMvc.perform(get(CUSTOMER_PATH_ID, testCustomer.getId())
-                        .with (httpBasic("user1", "password"))
+                        .with (httpBasic(username, password))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -70,7 +76,7 @@ class CustomerControllerTest {
     void shouldReturnAllCustomers() throws Exception {
         given(customerService.getAllCustomers()).willReturn(customerServiceImpl.getAllCustomers());
         mockMvc.perform(get(CUSTOMER_PATH)
-                        .with (httpBasic("user1", "password"))
+                        .with (httpBasic(username, password))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -85,7 +91,7 @@ class CustomerControllerTest {
         given(customerService.saveNewCustomer(any(CustomerDTO.class))).willReturn(customerServiceImpl.getAllCustomers().get(1));
 
         mockMvc.perform(post(CUSTOMER_PATH)
-                        .with (httpBasic("user1", "password"))
+                        .with (httpBasic(username, password))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customer)))
@@ -99,7 +105,7 @@ class CustomerControllerTest {
         CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
         given(customerService.updateCustomerById(any(), any())).willReturn(Optional.of(customer));
         mockMvc.perform(put(CUSTOMER_PATH_ID, customer.getId())
-                        .with (httpBasic("user1", "password"))
+                        .with (httpBasic(username, password))
                         .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
@@ -113,7 +119,7 @@ class CustomerControllerTest {
         CustomerDTO customer = customerServiceImpl.getAllCustomers().get(0);
         given(customerService.deleteById(any())).willReturn(true);
         mockMvc.perform(delete(CUSTOMER_PATH_ID, customer.getId())
-                        .with (httpBasic("user1", "password"))
+                        .with (httpBasic(username, password))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 

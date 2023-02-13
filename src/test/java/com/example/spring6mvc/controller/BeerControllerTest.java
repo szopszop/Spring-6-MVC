@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -54,6 +55,12 @@ class BeerControllerTest {
 
     BeerServiceImpl beerServiceImpl;
 
+    @Value("${spring.security.user.name}")
+    String username = "user1";
+    @Value("${spring.security.user.password}")
+    String password = "password";
+
+
     @BeforeEach
     void setUp() {
         beerServiceImpl = new BeerServiceImpl();
@@ -65,7 +72,7 @@ class BeerControllerTest {
                 null, null, false, 1, 25).getContent().get(0);
         given(beerService.getBeerById(testBeer.getId())).willReturn(Optional.of(testBeer));
         mockMvc.perform(get(BEER_PATH_ID, testBeer.getId())
-                        .with(httpBasic("user1", "password"))
+                        .with (httpBasic(username, password))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -80,7 +87,7 @@ class BeerControllerTest {
         given(beerService.getListOfBeers(any(), any(), any(), any(), any()))
                 .willReturn(beerServiceImpl.getListOfBeers(null, null, false, null, null));
         mockMvc.perform(get(BEER_PATH)
-                        .with(httpBasic("user1", "password"))
+                        .with (httpBasic(username, password))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -95,7 +102,7 @@ class BeerControllerTest {
         given(beerService.saveNewBeer(any(BeerDTO.class))).willReturn(beerServiceImpl.getListOfBeers(null, null, false, null, null).getContent().get(1));
 
         mockMvc.perform(post(BEER_PATH)
-                        .with(httpBasic("user1", "password"))
+                        .with (httpBasic(username, password))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beer)))
@@ -108,7 +115,7 @@ class BeerControllerTest {
         BeerDTO beerDTO = BeerDTO.builder()
                 .build();
         MvcResult mvcResult = mockMvc.perform(post(BEER_PATH)
-                        .with(httpBasic("user1", "password"))
+                        .with (httpBasic(username, password))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerDTO)))
@@ -124,7 +131,7 @@ class BeerControllerTest {
                 .upc(null)
                 .build();
         MvcResult mvcResult = mockMvc.perform(post(BEER_PATH)
-                        .with (httpBasic("user1", "password"))
+                        .with (httpBasic(username, password))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerDTO)))
@@ -140,7 +147,7 @@ class BeerControllerTest {
         given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beerDTO));
 
         MvcResult mvcResult = mockMvc.perform(put(BEER_PATH_ID, beerDTO.getId())
-                        .with (httpBasic("user1", "password"))
+                        .with (httpBasic(username, password))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerDTO)))
@@ -156,7 +163,7 @@ class BeerControllerTest {
         given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beerDTO));
 
         MvcResult mvcResult = mockMvc.perform(put(BEER_PATH_ID, beerDTO.getId())
-                        .with (httpBasic("user1", "password"))
+                        .with (httpBasic(username, password))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerDTO)))
@@ -171,7 +178,7 @@ class BeerControllerTest {
         given(beerService.updateBeerById(any(), any())).willReturn(Optional.of(beer));
 
         mockMvc.perform(put(BEER_PATH_ID, beer.getId())
-                        .with (httpBasic("user1", "password"))
+                        .with (httpBasic(username, password))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beer)))
@@ -185,7 +192,7 @@ class BeerControllerTest {
         BeerDTO beer = beerServiceImpl.getListOfBeers(null, null, false, 1, 25).getContent().get(0);
         given(beerService.deleteBeerById(any())).willReturn(true);
         mockMvc.perform(delete(BEER_PATH_ID, beer.getId())
-                        .with (httpBasic("user1", "password"))
+                        .with (httpBasic(username, password))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -201,7 +208,7 @@ class BeerControllerTest {
         beerMap.put("beerName", "New Name");
 
         mockMvc.perform(patch(BeerController.BEER_PATH_ID, beerDTO.getId())
-                        .with (httpBasic("user1", "password"))
+                        .with (httpBasic(username, password))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerMap)))
