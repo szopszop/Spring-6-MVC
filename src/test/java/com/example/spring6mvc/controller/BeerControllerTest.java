@@ -112,8 +112,7 @@ class BeerControllerTest {
 
     @Test
     void shouldSendBadRequestAfterSavingNewBeerWithAllNullRequiredArgs() throws Exception {
-        BeerDTO beerDTO = BeerDTO.builder()
-                .build();
+        BeerDTO beerDTO = BeerDTO.builder().build();
         MvcResult mvcResult = mockMvc.perform(post(BEER_PATH)
                         .with (httpBasic(username, password))
                         .accept(MediaType.APPLICATION_JSON)
